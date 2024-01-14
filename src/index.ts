@@ -18,19 +18,16 @@ class Optimizer extends HTMLElement {
     const picture = document.createElement('picture');
     const styleSheet = new CreateStyle();
 
-    const resolutions = customResolutions ? customResolutions.split(',').map(Number) : [320, 480, 800];
+    const resolutions = customResolutions ? Optimizer._getResolutions(customResolutions) : [320, 480, 800]
     let i = 0;
     for (const resolution of resolutions) {
-      this.generateResizedImage({
+      this._generateResizedImage({
         url: imageUrl as string,
         width: resolution,
         height: Number(customHeight)
       }).then((img) => {
-        const source = document.createElement('source');
-        source.setAttribute('srcset', img.src);
-        source.setAttribute('media', `(max-width: ${resolution}px)`);
 
-        picture.appendChild(source);
+        Optimizer._renderPicture(img, picture, resolution)
 
         if (i === resolutions.length - 1) picture.appendChild(img);
         i++;
@@ -42,7 +39,7 @@ class Optimizer extends HTMLElement {
     this.shadowRoot!.appendChild(picture);
   }
 
-  generateResizedImage({ url, width, height }: GenerateResizedImage): Promise<HTMLImageElement> {
+  private _generateResizedImage({ url, width, height }: GenerateResizedImage): Promise<HTMLImageElement> {
     return new Promise((resolve) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
@@ -68,6 +65,24 @@ class Optimizer extends HTMLElement {
 
       img.src = `${url}?width=${width}`;
     });
+  }
+
+  private static _renderPicture(image: HTMLImageElement, picture: HTMLPictureElement, resolution: number): void {
+    const source = document.createElement('source');
+    source.setAttribute('srcset', image.src);
+    source.setAttribute('media', `(max-width: ${resolution}px)`);
+
+    picture.appendChild(source);
+  }
+
+  private static _getResolutions(resolutions: string | number[] | string[]): number[] {
+    if (typeof resolutions === 'string') return resolutions.split(',').map(Number);
+    
+    return resolutions.map((resolution: string | number) => {
+      if (typeof resolution === 'number') return resolution
+
+      return Number(resolution)
+    })
   }
 }
 

@@ -1,7 +1,7 @@
 {
-  "name": "image-optimizer",
+  "name": "@pedrom/image-optimizer",
   "version": "0.0.1",
-  "description": "A ssr image optimizer that your output is a react component, inpired by Nextjs Image component behavior",
+  "description": "An image optimizer using semantic html and shadow dom",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -9,11 +9,6 @@
   },
   "author": "Pedro M",
   "license": "ISC",
-  "dependencies": {
-    "@webcomponents/custom-elements": "^1.6.0",
-    "express": "^4.18.2",
-    "sharp": "^0.33.1"
-  },
   "devDependencies": {
     "@babel/core": "^7.23.7",
     "@babel/preset-env": "^7.23.8",

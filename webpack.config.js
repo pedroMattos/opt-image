@@ -4,7 +4,7 @@ module.exports = {
   entry: './src/index.ts',
   output: {
     filename: 'optImage.js',
-    path: path.resolve(__dirname, 'dist'),
+    path: path.resolve(__dirname, 'lib'),
   },
   module: {
     rules: [

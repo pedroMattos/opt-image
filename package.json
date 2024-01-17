@@ -12,6 +12,7 @@
   "scripts": {
     "test": "jest",
     "test-and-build": "npm test && npm run build",
+    "publish-safety": "npm run test-and-build && npm publish --registry https://registry.npmjs.org/",
     "build": "webpack --mode=production",
     "prepack": "npmignore --auto"
   },

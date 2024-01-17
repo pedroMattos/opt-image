@@ -1,8 +1,8 @@
 {
   "name": "@pedropmatt/easy-image-optimization",
-  "version": "0.0.4",
+  "version": "0.0.8",
   "description": "An image optimizer using semantic html and shadow dom",
-  "main": "index.js",
+  "main": "lib/optImage.js",
   "keywords": [
     "react",
     "vue",

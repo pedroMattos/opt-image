@@ -2,7 +2,7 @@ import { type GenerateResizedImage } from "./types/generateResizedImage.type";
 import CreateStyle from "./utils/CreateStyle";
 import getResolutions from "./utils/GetResolutions";
 
-export class Optimizer extends HTMLElement {
+class Optimizer extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -30,7 +30,7 @@ export class Optimizer extends HTMLElement {
 
         Optimizer._renderPicture(img, picture, resolution)
 
-        if (actualIndex === resolutions.length ) picture.appendChild(img);
+        if (actualIndex === resolutions.length -1) picture.appendChild(img);
         actualIndex++
       });
     }

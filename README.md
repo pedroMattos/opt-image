@@ -66,7 +66,7 @@ See the `contribution.md` to start.
 - SSR support.
 
 - Avif support.
-## Autores
+## Autors
 
 - [@pedroMattos](https://github.com/pedroMattos)
 

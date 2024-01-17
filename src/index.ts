@@ -1,7 +1,8 @@
 import { type GenerateResizedImage } from "./types/generateResizedImage.type";
 import CreateStyle from "./utils/CreateStyle";
+import getResolutions from "./utils/GetResolutions";
 
-class Optimizer extends HTMLElement {
+export class Optimizer extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: 'open' });
@@ -18,7 +19,7 @@ class Optimizer extends HTMLElement {
     const picture = document.createElement('picture');
     const styleSheet = new CreateStyle();
 
-    const resolutions = customResolutions ? Optimizer._getResolutions(customResolutions) : [320, 480, 800]
+    const resolutions = customResolutions ? getResolutions(customResolutions) : [320, 480, 800]
     let actualIndex = 0;
     for (const resolution of resolutions) {
       this._generateResizedImage({
@@ -91,34 +92,6 @@ class Optimizer extends HTMLElement {
 
     picture.appendChild(source);
   }
-
-  private static _getResolutions(resolutions: string | number[] | string[]): number[] {
-    if (typeof resolutions === 'string') {
-      const resolutionStrings = resolutions.split(',').map(str => str.trim())
-
-      const validResolutions = resolutionStrings.map(Number)
-        .filter(validResolution)
-
-      if (validResolutions.length !== resolutionStrings.length) throw new Error("Resolutions has invalid values.");
-      
-      return validResolutions
-    }
-
-    if (!resolutions.length) throw new Error("Resolutions cannot be empty, try provide your custom resolutions like this: '100,200,300'");
-    
-    return resolutions.map((resolution: string | number) => {
-      const number = typeof resolution === 'number' ? resolution : Number(resolution)
-      
-      if (!validResolution(number)) throw new Error("Resolutions has invalid values.");
-      
-      return number
-    })
-  }
-
-}
-
-function validResolution(resolution: number) {
-  return typeof resolution === 'number' && !isNaN(resolution) && isFinite(resolution) && resolution !== 0
 }
 
 (() => {

@@ -57,7 +57,7 @@ class Optimizer extends HTMLElement {
         ctx!.drawImage(img, 0, 0, width, calculatedHeight);
 
         const resizedImg = document.createElement('img');
-        resizedImg.src = canvas.toDataURL('image/jpeg');
+        resizedImg.src = canvas.toDataURL('image/webp');
         resizedImg.alt = `Imagem redimensionada para ${width}x${calculatedHeight}`;
 
         resolve(resizedImg);
@@ -76,14 +76,34 @@ class Optimizer extends HTMLElement {
   }
 
   private static _getResolutions(resolutions: string | number[] | string[]): number[] {
-    if (typeof resolutions === 'string') return resolutions.split(',').map(Number);
+    if (typeof resolutions === 'string') {
+      const resolutionStrings = resolutions.split(',').map(str => str.trim())
+
+      const validResolutions = resolutionStrings.map(Number)
+        .filter(validResolution)
+
+      if (validResolutions.length !== resolutionStrings.length) throw new Error("Resolutions has invalid values.");
+      
+      return validResolutions
+    }
+
+    if (!resolutions.length) throw new Error("Resolutions cannot be empty, try provide your custom resolutions like this: '100,200,300'");
     
     return resolutions.map((resolution: string | number) => {
-      if (typeof resolution === 'number') return resolution
-
-      return Number(resolution)
+      const number = typeof resolution === 'number' ? resolution : Number(resolution)
+      
+      if (!validResolution(number)) throw new Error("Resolutions has invalid values.");
+      
+      return number
     })
   }
+
 }
 
-customElements.define('opt-image', Optimizer);
+function validResolution(resolution: number) {
+  return typeof resolution === 'number' && !isNaN(resolution) && isFinite(resolution) && resolution !== 0
+}
+
+(() => {
+  customElements.define('opt-image', Optimizer);
+})()

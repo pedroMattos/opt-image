@@ -19,7 +19,7 @@ class Optimizer extends HTMLElement {
     const styleSheet = new CreateStyle();
 
     const resolutions = customResolutions ? Optimizer._getResolutions(customResolutions) : [320, 480, 800]
-    let i = 0;
+    let actualIndex = 0;
     for (const resolution of resolutions) {
       this._generateResizedImage({
         url: imageUrl as string,
@@ -29,8 +29,8 @@ class Optimizer extends HTMLElement {
 
         Optimizer._renderPicture(img, picture, resolution)
 
-        if (i === resolutions.length - 1) picture.appendChild(img);
-        i++;
+        if (actualIndex === resolutions.length ) picture.appendChild(img);
+        actualIndex++
       });
     }
 
@@ -40,13 +40,18 @@ class Optimizer extends HTMLElement {
   }
 
   private _generateResizedImage({ url, width, height }: GenerateResizedImage): Promise<HTMLImageElement> {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
 
       img.onload = () => {
         const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const canvas2DContext = canvas.getContext('2d');
+
+        if (!canvas2DContext) {
+          reject(new Error("Canvas 2D context is not supported."))
+          return
+        }
 
         const aspectRatio = img.height / img.width;
         const calculatedHeight = height || Math.round(width * aspectRatio);
@@ -54,14 +59,26 @@ class Optimizer extends HTMLElement {
         canvas.width = width;
         canvas.height = calculatedHeight;
 
-        ctx!.drawImage(img, 0, 0, width, calculatedHeight);
+        try {
+          canvas2DContext!.drawImage(img, 0, 0, width, calculatedHeight);
+  
+          const resizedImg = document.createElement('img');
+          resizedImg.src = canvas.toDataURL('image/webp');
+          resizedImg.alt = `${width}x${calculatedHeight}`;
+  
+          resolve(resizedImg);
+        } catch (error) {
+          reject(new Error("Error drawing image on canvas."))
+        }
+      }
 
-        const resizedImg = document.createElement('img');
-        resizedImg.src = canvas.toDataURL('image/webp');
-        resizedImg.alt = `Imagem redimensionada para ${width}x${calculatedHeight}`;
-
-        resolve(resizedImg);
-      };
+      img.onerror = () => {
+        reject(new Error("Error loading image."))
+      }
+  
+      img.onabort = () => {
+        reject(new Error("Image loading aborted."))
+      }
 
       img.src = `${url}?width=${width}`;
     });

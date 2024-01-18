@@ -35,7 +35,7 @@ class Optimizer extends HTMLElement {
       });
     }
 
-    const sheet = styleSheet.addStyle('img { width: 100%; object-fit: cover; }');
+    const sheet = styleSheet.addStyle('img { width: 100%; height: 100%; object-fit: cover; }');
     this.shadowRoot!.adoptedStyleSheets = [sheet];
     this.shadowRoot!.appendChild(picture);
   }

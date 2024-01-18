@@ -44,23 +44,25 @@ Import the script that will construct the component
 
 Just use it
 ```bash
-  <opt-image :image-url="imageUrl" :resolutions="[200, 550, 1366]" />
+    <opt-image image-url={imageUrl} :resolutions={resolutions} />
 ```
 
     
 ## Usage (Vue 3)
 
 ```typescript
-<script lang="ts" setup>
-import "@pedropmatt/easy-image-optimization"
+import { useEffect } from 'react'
 
-const imageUrl = computed(() => 'https://cdn.pixabay.com/photo/2023/12/14/07/44/dog-8448345_1280.jpg')
-const resolutions = computed(() => [200, 550, 1366])
-</script>
+const YourComponent = ({ imageUrl: string, resolutions: number[] | string[] }) => {
+    useEffect(() => {
+        import("@pedropmatt/easy-image-optimization")
+    })
 
-<template>
-    <opt-image :image-url="imageUrl" :resolutions="resolutions" />
-</template>
+    return <opt-image image-url={imageUrl} :resolutions={resolutions} />
+
+}
+
+export default YourComponent
 ```
 
 ## Usage (React)

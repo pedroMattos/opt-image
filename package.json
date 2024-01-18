@@ -1,6 +1,6 @@
 {
   "name": "@pedropmatt/easy-image-optimization",
-  "version": "0.0.13",
+  "version": "0.0.16",
   "description": "An image optimizer using semantic html and shadow dom",
   "main": "lib/optImage.js",
   "keywords": [

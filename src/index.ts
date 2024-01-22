@@ -10,7 +10,6 @@ class Optimizer extends HTMLElement {
 
   connectedCallback() {
     const imageUrl = this.getAttribute('image-url');
-    const customHeight = this.getAttribute('height');
     const customResolutions = this.getAttribute('resolutions');
 
     if (!imageUrl) throw new Error("Image url cannot be undefined or null.");
@@ -25,7 +24,6 @@ class Optimizer extends HTMLElement {
       this._generateResizedImage({
         url: imageUrl as string,
         width: resolution,
-        height: Number(customHeight)
       }).then((img) => {
 
         Optimizer._renderPicture(img, picture, resolution)
@@ -40,7 +38,7 @@ class Optimizer extends HTMLElement {
     this.shadowRoot!.appendChild(picture);
   }
 
-  private _generateResizedImage({ url, width, height }: GenerateResizedImage): Promise<HTMLImageElement> {
+  private _generateResizedImage({ url, width }: GenerateResizedImage): Promise<HTMLImageElement> {
     return new Promise((resolve, reject) => {
       const img = new Image();
       img.crossOrigin = 'anonymous';
@@ -55,7 +53,7 @@ class Optimizer extends HTMLElement {
         }
 
         const aspectRatio = img.height / img.width;
-        const calculatedHeight = height || Math.round(width * aspectRatio);
+        const calculatedHeight =  Math.round(width * aspectRatio);
 
         canvas.width = width;
         canvas.height = calculatedHeight;
